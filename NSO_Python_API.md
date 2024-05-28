@@ -165,3 +165,170 @@ class Container(Node)
  |      Get internal representation.
 ...
 ```
+
+### ncs_pycli
+
+```python
+In [1]: for device in root.ncs__devices.device:
+...: print(device.name)
+...:
+ce0
+ce1
+
+In [2]: device = root.ncs__devices.device['ce0']
+
+In [3]: type(device)
+Out[3]: ncs.maagic.ListElement
+
+In [4]: device
+Out[4]: ListElement name=device tag=617911018 keys={ce0}
+
+In [5]: help(device)
+
+In [6]: device.
+device.active_settings
+device.address
+```
+
+<https://github.com/NSO-developer/ncs_pycli>
+
+### Documentation
+
+- <https://developer.cisco.com/docs/nso/guides/python-api-overview/#python-api-overview>
+- <https://developer.cisco.com/docs/nso/api/ncs/#package-ncs>
+- <https://developer.cisco.com/docs/nso/guides/ncs-man-pages-volume-3/#man.3.confd_lib_maapi>
+
+### Maagic with Devtools
+
+```python
+admin@ncs# devtools true
+admin@ncs# show running-config devices device ex0 | display maagic
+root.ncs__devices.device['ex0'].address 127.0.0.1
+root.ncs__devices.device['ex0'].port 12022
+root.ncs__devices.device['ex0'].authgroup default
+root.ncs__devices.device['ex0'].device-type.netconf.ned-id ne-nc-1.0
+root.ncs__devices.device['ex0'].config.aaa__aaa.authentication.users.user['admin']
+root.ncs__devices.device['ex0'].config.aaa__aaa.authentication.users.user['oper']
+```
+
+```python
+admin@ncs# config
+Entering configuration mode terminal
+admin@ncs(config)# devices device ex0 port 10233
+admin@ncs(config-device-ex0)# top
+admin@ncs(config)# show configuration | display maagic
+root = ncs.maagic.get_root(t)
+root.ncs__devices.device['ex0'].port = '10233'
+```
+
+<https://developer.cisco.com/docs/nso/guides/nso-cli/#displaying-the-configuration>
+
+### Logs
+
+- `tailf-ncs-python-vm.yang` & `ncs.conf` define the python-vm container.
+  - See example 26: “The Python VM YANG model” for full explanation.
+- Some of `python-vm` nodes are by default invisible.
+  - See documentation for xml and cli command needed.
+- Filename: `logs/ncs-python-vm-<package-name>.log` by default.
+
+<https://developer.cisco.com/docs/nso/guides/the-nso-python-vm/#the-nso-python-vm>
+
+### Debug
+
+- Python packages run without an attached console.
+  - Standard output collected in `ncs-python-vm.log`
+- Python APIs provide logging objects based on the standard Python logging module.
+- Default logging level set to info.
+
+```bash
+$ ncs_cli -u admin
+admin@ncs> config
+admin@ncs% set python-vm logging level level-debug
+admin@ncs% commit
+```
+
+## Services with Python
+
+```python
+from ncs.application import Application
+from ncs.application import Service
+import ncs.template
+
+class ServiceCallbacks(Service):
+  @Service.create
+  def cb_create(self, tctx, root, service, proplist):
+    self.log.info('Service create(service=', service._path, ')')
+    # Add the service logic
+
+class Service(Application):
+  def setup(self):
+    self.log.info('Worker RUNNING')
+    self.register_service('service-servicepoint', ServiceCallbacks)
+  def teardown(self):
+    self.log.info('Worker FINISHED')
+```
+
+```python
+class ServiceCallbacks(Service):
+  @Service.create
+  def cb_create(self, tctx, root, service, proplist):
+    self.log.info('Service create(service=', service._path, ')')
+
+    # Add the service logic >>>>>>>
+    vars = ncs.template.Variables()
+    vars.add('MAGIC', '42')
+    vars.add('CE', service.device)
+    vars.add('INTERFACE', service.unit)
+    template = ncs.template.Template(service)
+    template.apply('pyservice-template', vars)
+
+    self.log.info('Template is applied')
+
+    dev = root.devices.device[service.device]
+    dev.description = "This device was modified by %s" % service._path
+```
+
+```python
+class ServiceCallbacks(Service):
+
+  @Service.create
+  def cb_create(self, tctx, root, service, proplist):
+    self.log.info('Service create(service=', service._path, ')')
+
+  @Service.pre_modification
+  def cb_pre_modification(self, tctx, op, kp, root, proplist):
+    self.log.info('Service premod(service=', kp, ')')
+
+  @Service.post_modification
+  def cb_post_modification(self, tctx, op, kp, root, proplist):
+    self.log.info('Service premod(service=', kp, ')')
+```
+
+<https://developer.cisco.com/docs/nso/guides/python-api-overview/#python-packages>
+
+## Nano Services
+
+- Reactive FASTMAP (RFM)
+- Provide provisioning steps.
+- Handle side-effects, useful for working with external systems.
+
+<https://developer.cisco.com/docs/nso/guides/nano-services-for-staged-provisioning>
+
+## More Resources
+
+```bash
+find $NCS_DIR/examples.ncs/ -name "*.py" | grep -v "__init__.py"
+```
+
+## Call to Action
+
+Continue your learning journey
+
+- Expand your knowledge
+  - <https://developer.cisco.com/docs/nso/guides/python-api-overview>
+- Practice the NSO Python API
+  - <https://developer.cisco.com/learning/labs/service-dev-201/introduction>
+- Get started with NSO
+  - <https://developer.cisco.com/learning/tracks/get_started_with_nso>
+- Review best practices for service development
+  - <https://github.com/NSO-developer/nso-service-dev-practices>
