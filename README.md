@@ -38,3 +38,7 @@ cd ${NCS_RUN_DIR}
 ncs-netsim start
 ncs
 ```
+
+```bash
+echo "devices device core-rtr0 sync-from" | ncs_cli -C -u admin
+```
