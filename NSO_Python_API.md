@@ -226,7 +226,7 @@ root.ncs__devices.device['ex0'].port = '10233'
 ### Logs
 
 - `tailf-ncs-python-vm.yang` & `ncs.conf` define the python-vm container.
-  - See example 26: “The Python VM YANG model” for full explanation.
+  - See example 26: _The Python VM YANG model_ for full explanation.
 - Some of `python-vm` nodes are by default invisible.
   - See documentation for xml and cli command needed.
 - Filename: `logs/ncs-python-vm-<package-name>.log` by default.
@@ -249,6 +249,8 @@ admin@ncs% commit
 
 ## Services with Python
 
+Registering a service.
+
 ```python
 from ncs.application import Application
 from ncs.application import Service
@@ -267,6 +269,8 @@ class Service(Application):
   def teardown(self):
     self.log.info('Worker FINISHED')
 ```
+
+Adding custom logic.
 
 ```python
 class ServiceCallbacks(Service):
@@ -287,6 +291,8 @@ class ServiceCallbacks(Service):
     dev = root.devices.device[service.device]
     dev.description = "This device was modified by %s" % service._path
 ```
+
+Pre and Post modifications.
 
 ```python
 class ServiceCallbacks(Service):
