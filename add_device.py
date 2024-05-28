@@ -18,26 +18,27 @@ def parse_args():
 
 
 def main(args):
-    with ncs.maapi.Maapi() as m:
-        with ncs.maapi.Session(m, "admin", "system"):
-            with m.start_write_trans() as t:
+    with ncs.maapi.Maapi() as maapi:
+        with ncs.maapi.Session(maapi=maapi, user="admin", context="system"):
+            with maapi.start_write_trans() as transaction:
                 print(f'Setting the device "{args.name}" configuration...')
 
                 # Get a reference to the device list
-                root = ncs.maagic.get_root(t)
+                root = ncs.maagic.get_root(backend=transaction)
                 device_list = root.devices.device
 
                 if args.name not in device_list:
                     device = device_list.create(args.name)
-                    device.address = args.address
                     device.port = args.port
-                    device.description = args.desc
                     device.authgroup = args.auth
+                    device.address = args.address
+                    device.description = args.desc
                     dev_type = device.device_type.cli
                     dev_type.ned_id = args.ned
                     device.state.admin_state = "unlocked"
+
                     print("Committing the device configuration...")
-                    t.apply()
+                    transaction.apply()
                     print("Device committed!")
                 else:
                     print(
@@ -49,7 +50,7 @@ def main(args):
 
             # fetch-host-keys and sync-from does not require a
             # transaction, continue using the Maapi object
-            root = ncs.maagic.get_root(m)
+            root = ncs.maagic.get_root(backend=maapi)
             device = root.devices.device[args.name]
             print("Fetching SSH keys...")
             output = device.ssh.fetch_host_keys()
