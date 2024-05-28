@@ -42,3 +42,39 @@ ncs
 ```bash
 echo "devices device core-rtr0 sync-from" | ncs_cli -C -u admin
 ```
+
+## Scripting with the NSO Python API
+
+Use the following Python commands to establish a connection to the NSO and print management addresses that the NSO uses to connect to the devices:
+
+```python
+from pprint import pprint as pp
+import ncs
+
+m = ncs.maapi.Maapi()
+m.start_user_session('admin', 'system', [])
+trans = m.start_write_trans()
+root = ncs.maagic.get_root(trans)
+for dev in root.devices.device:
+    print(f"Device {dev.name} address {dev.address}")
+    pp(dir(dev))
+m.close()
+```
+
+```python
+import ncs
+with ncs.maapi.single_write_trans('admin', 'system') as t:
+    root = ncs.maagic.get_root(t)
+    root.devices.device['core-rtr0'].config.hostname = 'test-device'
+    t.apply()
+```
+
+echo "show running-config devices device core-rtr0 config hostname" | ncs_cli -C -u admin
+
+```python
+python3 ${LAB_DIR}/add_device.py --help
+```
+
+```python
+python3 ${LAB_DIR}/add_device.py --name core-rtr0 --address 127.0.0.1 --ned cisco-iosxr-cli-7.5 --auth default
+```
