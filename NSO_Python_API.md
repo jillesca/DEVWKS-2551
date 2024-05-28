@@ -41,14 +41,32 @@ Management Agent API
 import ncs
 
 with ncs.maapi.Maapi() as maapi:
-  with ncs.maapi.Session(maapi=maapi, user="admin", context="system"):
-    with maapi.start_read_trans() as transaction:
-      address = transaction.get_elem("/ncs:devices/device{ex0}/address")
-      print("First read: Address = %s" % address)
+    with ncs.maapi.Session(maapi=maapi, user="admin", context="system"):
+        with maapi.start_read_trans() as transaction:
+            address = transaction.get_elem("/ncs:devices/device{ex0}/address")
+            print("First read: Address = %s" % address)
 
 with ncs.maapi.single_write_trans(user="admin", context="system") as transaction:
-  transaction.set_elem2("Vegas was here", "/ncs:devices/device{ex0}/description")
-  transaction.apply()
+    transaction.set_elem2("Vegas was here", "/ncs:devices/device{ex0}/description")
+    transaction.apply()
+
+```
+
+```python
+# Access list item
+router = root.devices.device["internet-rtr0"]
+
+# Create list item
+root.services.l3vpn.create("test-l3vpn")
+
+# Check if list item with a key exists
+"internet-rtr0" in root.devices.device
+
+# Set leaf value
+root.devices.device["internet-rtr0"].address = "10.0.0.1"
+
+# Remove list item
+del root.devices.device["internet-rtr0"]
 ```
 
 <https://developer.cisco.com/docs/nso/guides/python-api-overview/>
@@ -78,7 +96,72 @@ with ncs.maapi.single_write_trans(user="admin", context="system") as transaction
 | `root.devices.device['ce0'].port`            | int               |
 
 Maagic object from a keypath:
+
 `node = ncs.maagic.get_node(transaction_id, '/ncs:devices/device{ce0}')`
 
-https://developer.cisco.com/docs/nso/guides/python-api-overview/#maagic-api
-https://developer.cisco.com/docs/nso/api/ncs-maagic/
+<https://developer.cisco.com/docs/nso/guides/python-api-overview/#maagic-api>
+<https://developer.cisco.com/docs/nso/api/ncs-maagic/>
+
+## Transactions and Commits
+
+- Use Python Context Managers (the `with` key word)
+- Transactions are closed by default after they are applied
+- Commit options can be specified
+- You only need to create a write transactions for actions, not services
+
+```python
+import ncs
+
+with ncs.maapi.Maapi() as m:
+    with ncs.maapi.Session(m, "admin", "python", groups=["ncsadmin"]):
+        with m.start_write_trans() as t_rw:
+
+            root = ncs.maagic.get_root(t_rw)
+            device_cdb = root.devices.device["eng04-cleaf-02"]
+            device_cdb.config.interface.loopback[0].description = ("Done from python API")
+
+            # Starting dry-run
+            cp = ncs.maapi.ConfigParams()
+            cp.dry_run_native()
+            dry_run_result = t_rw.apply_params(True, cp)
+```
+
+## Navigate the API
+
+### Python `help()` function
+
+```python
+>>> import ncs
+>>> with ncs.maapi.single_write_trans(user="admin", context="system") as transaction:
+... root = ncs.maagic.get_root(transaction)
+... devices = root.devices
+...
+>>> help(devices)
+```
+
+Will result:
+
+```bash
+Help on Container in module ncs.maagic object:
+
+class Container(Node)
+ |  Container(backend, cs_node, parent=None)
+ |
+ |  Represents a yang container.
+ |
+ |  A (non-presence) container node or a list element, contains other nodes.
+ |
+ |  Method resolution order:
+ |      Container
+ |      Node
+ |      builtins.object
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, backend, cs_node, parent=None)
+ |      Initialize Container node. Should not be called explicitly.
+ |
+ |  __repr__(self)
+ |      Get internal representation.
+...
+```
