@@ -1,15 +1,16 @@
-build-workshop:
-	./build-workshop.sh
+workshop:
+	chmod +x ./build_workshop.sh
+	./build_workshop.sh
 
 run:
 	$(MAKE) clean
-	docker compose --profile prod up --wait -d
+	docker compose up -d
 
 cli:
 	docker exec -it nso-workshop /bin/bash
 
 clean: 
-	docker compose --profile prod down
+	docker compose down
 
 follow:
 	docker logs --follow nso-workshop

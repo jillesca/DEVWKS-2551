@@ -19,4 +19,6 @@ services:
       start_period: 10s
       timeout: 10s
     volumes:
-      - ./tmp:/tmp
+      - ./tmp:/tmp/
+      - ./build_workshop.sh:/home/developer/build_workshop.sh
+      - ./Makefile:/home/developer/Makefile

@@ -1,3 +1,0 @@
-FROM cisco-nso-prod:6.2.5
-
-EXPOSE 443 2024 8080

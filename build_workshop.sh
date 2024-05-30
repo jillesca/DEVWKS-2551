@@ -3,9 +3,13 @@
 set -eu # Abort the script if a command returns with a non-zero exit code or if
         # a variable name is dereferenced when the variable hasn't been set
 
-# Source the environment variables
+# set and save environment variables
+LAB_DIR=${HOME}/src
+NCS_RUN_DIR=${LAB_DIR}/workshop
+
 echo LAB_DIR=${HOME}/src >> /etc/environment
-echo NCS_RUN_DIR=${LAB_DIR}/nso-instance >> /etc/environment
+echo NCS_RUN_DIR=${LAB_DIR}/workshop >> /etc/environment
+echo 'alias ll="ls -al"' >> $HOME/.bashrc
 
 source /etc/environment
 
@@ -21,6 +25,9 @@ ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cis
 
 # setup netsim
 ncs-setup --dest ${NCS_RUN_DIR} --netsim-dir ${NCS_RUN_DIR}/netsim
+
+# create the router package
+ncs-make-package  --no-java --service-skeleton python-and-template --component-class router.Router --dest ${NCS_RUN_DIR}/packages/router router
 
 # start netsim devices and ncs
 cd ${NCS_RUN_DIR}
