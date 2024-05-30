@@ -41,8 +41,11 @@ ncs-netsim status --dir ${NCS_RUN_DIR}/netsim  | grep -iE 'status|device'
 echo -e "${GREEN}Starting NCS${NC}"
 ncs
 
-echo -e "${GREEN}# ncs status${NC}"
+echo -e "${GREEN}# NCS status${NC}"
 ncs --status | grep -i status
+
+echo -e "${GREEN}# NCS packages${NC}"
+echo "show packages package oper-status" | ncs_cli -C -u admin 
 
 echo -e "${GREEN}# Syncing devices${NC}"
 echo "devices sync-from" | ncs_cli -C -u admin
