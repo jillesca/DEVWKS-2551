@@ -62,6 +62,16 @@ def show_xr_command(device_name: str, show_command: str) -> None:
             print(result.result)
 
 
+def get_device_hostname(device_name: str) -> None:
+    with ncs.maapi.single_read_trans(
+        user="admin", context="system"
+    ) as transaction:
+        root = ncs.maagic.get_root(backend=transaction)
+        device = root.devices.device[device_name]
+        result = device.config.hostname
+        print(f"{result=}")
+
+
 if "__main__" == __name__:
 
     HOSTNAME = "devwks-2551"
@@ -74,3 +84,4 @@ if "__main__" == __name__:
     show_xr_command(
         device_name=DEVICE_NAME, show_command="running-config hostname"
     )
+    get_device_hostname(device_name=DEVICE_NAME)
