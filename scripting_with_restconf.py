@@ -34,6 +34,7 @@ def get_xr_device_hostname_rest_path(hostname: str) -> str:
 
 def main() -> None:
     DEVICE_NAME = "core-rtr0"
+
     session = create_restconf_session()
     api_endpoint = get_xr_device_hostname_rest_path(hostname=DEVICE_NAME)
     response = fetch_data(session, api_endpoint)
