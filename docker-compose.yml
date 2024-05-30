@@ -1,0 +1,22 @@
+services:
+  nso:
+    image: cisco-nso-prod:6.2.5
+    container_name: nso-workshop
+    hostname: nso-workshop
+    tty: true
+    restart: always
+    environment:
+      - EXTRA_ARGS=--with-package-reload
+      - ADMIN_PASSWORD=admin
+    ports:
+      - "443:443"
+      - "2024:2024"
+      - "8080:8080"
+    healthcheck:
+      test: ncs_cmd -c "wait-start 2"
+      interval: 5s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    volumes:
+      - ./tmp:/tmp
