@@ -9,8 +9,8 @@ def see_devices_attributes() -> None:
 
     root = ncs.maagic.get_root(backend=transaction)
     for device in root.devices.device:
-        if "core-rtr" in device.name:
-            pp(dir(device))
+        pp(dir(device))
+        pp(type(device))
     maapi.close()
 
 
@@ -47,20 +47,30 @@ def update_device_attribute(device_name: str, hostname: str) -> None:
         root = ncs.maagic.get_root(backend=transaction)
         root.devices.device[device_name].config.hostname = hostname
         transaction.apply()
+        print("Transaction applied")
 
 
-def show_xr_command(device_name: str, command: str):
-    with ncs.maapi.start_user_session(
-        user="admin", context="system", groups=[]
-    ) as transaction:
-        root = ncs.maagic.get_root(backend=transaction)
-        device = root.devices.device[device_name]
-        device.live_status.cisco_ios_xr_stats__exec(command)
-        transaction.apply()
+def show_xr_command(device_name: str, show_command: str) -> None:
+    with ncs.maapi.Maapi() as maapi:
+        with ncs.maapi.Session(maapi=maapi, user="admin", context="system"):
+            root = ncs.maagic.get_root(backend=maapi)
+            device = root.devices.device[device_name]
+            cli_any_command = device.live_status.cisco_ios_xr_stats__exec.show
+            command = cli_any_command.get_input()
+            command.args = [show_command]
+            result = cli_any_command.request(command)
+            print(result.result)
 
 
 if "__main__" == __name__:
+
+    HOSTNAME = "devwks-2551"
+    DEVICE_NAME = "core-rtr0"
+
     see_devices_attributes()
-    # see_device_address()
-    # update_device_attribute_dry_run(device_name="core-rtr0", hostname="devwks-2551")
-    # update_device_attribute(device_name="core-rtr0", hostname="devwks-2551")
+    see_device_address()
+    update_device_attribute_dry_run(device_name=DEVICE_NAME, hostname=HOSTNAME)
+    update_device_attribute(device_name=DEVICE_NAME, hostname=HOSTNAME)
+    show_xr_command(
+        device_name=DEVICE_NAME, show_command="running-config hostname"
+    )
