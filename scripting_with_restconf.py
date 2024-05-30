@@ -28,14 +28,14 @@ def parse_xml(xml: str) -> dict:
     return BeautifulSoup(xml, "xml")
 
 
-def get_xr_path_hostname(hostname: str) -> str:
+def get_xr_device_hostname_rest_path(hostname: str) -> str:
     return f"/restconf/data/tailf-ncs:devices/device={hostname}/config/tailf-ned-cisco-ios-xr:hostname"
 
 
 def main() -> None:
     DEVICE_NAME = "core-rtr0"
     session = create_restconf_session()
-    api_endpoint = get_xr_path_hostname(hostname=DEVICE_NAME)
+    api_endpoint = get_xr_device_hostname_rest_path(hostname=DEVICE_NAME)
     response = fetch_data(session, api_endpoint)
     parsed_response = parse_xml(response)
 
