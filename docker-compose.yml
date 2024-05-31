@@ -22,3 +22,5 @@ services:
       - ./tmp:/tmp/
       - ./build_workshop.sh:/home/developer/build_workshop.sh
       - ./Makefile:/home/developer/Makefile
+      - ./scripting:/home/developer/scripting
+      - ./packages/router:/home/developer/packages/router

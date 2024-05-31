@@ -45,7 +45,7 @@ module router {
     key name;
 
     uses ncs:service-data;
-    ncs:servicepoint "router";
+    ncs:servicepoint "router-servicepoint";
 
     leaf name {
       type string;

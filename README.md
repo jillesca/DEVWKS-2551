@@ -70,7 +70,8 @@ python3 ${LAB_DIR}/add_device.py --name core-rtr0 --address 127.0.0.1 --ned cisc
 Access netsim cli device.
 
 ```bash
-ncs-netsim cli-c core-rtr0 --dir ~/src/nso-instance/netsim
+ncs-netsim cli-c core-rtr0 --dir ~/src/workshop/netsim
+ncs-netsim cli-c dist-rtr0 --dir ~/src/workshop/netsim
 show running-config hostname
 ```
 

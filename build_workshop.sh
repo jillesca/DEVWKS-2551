@@ -22,14 +22,16 @@ mkdir -p ${LAB_DIR}
 mkdir -p ${NCS_RUN_DIR}
 
 echo -e "${GREEN}# Creating up netsim${NC}"
+ncs-netsim delete-network --dir ${NCS_RUN_DIR}/netsim
 ncs-netsim --dir ${NCS_RUN_DIR}/netsim create-network $NCS_DIR/packages/neds/cisco-ios-cli-3.0 1 dist-rtr
 ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cisco-iosxr-cli-3.5 1 core-rtr
 
 echo -e "${GREEN}# Configuring netsim devices${NC}"
 ncs-setup --dest ${NCS_RUN_DIR} --netsim-dir ${NCS_RUN_DIR}/netsim
 
-echo -e "${GREEN}# Building the router package${NC}"
-ncs-make-package  --no-java --service-skeleton python-and-template --component-class router.Router --dest ${NCS_RUN_DIR}/packages/router router
+echo -e "${GREEN}# Copying the router package${NC}"
+cp -r ${HOME}/packages/router ${NCS_RUN_DIR}/packages
+# ncs-make-package  --no-java --service-skeleton python-and-template --component-class router.Router --dest ${NCS_RUN_DIR}/packages/router router
 
 echo -e "${GREEN}# Starting netsim devices${NC}"
 cd ${NCS_RUN_DIR}
@@ -42,7 +44,7 @@ echo -e "${GREEN}Starting NCS${NC}"
 ncs
 
 echo -e "${GREEN}# NCS status${NC}"
-ncs --status | grep -i status
+ncs --status | grep -i 'status:'
 
 echo -e "${GREEN}# NCS packages${NC}"
 echo "show packages package oper-status" | ncs_cli -C -u admin 

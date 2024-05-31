@@ -1,10 +1,13 @@
 <ncs-package xmlns="http://tail-f.com/ns/ncs-packages">
   <name>router</name>
   <package-version>1.0</package-version>
-  <description>Template-based router resource facing service</description>
+  <description>Generated Python package</description>
   <ncs-min-version>6.2</ncs-min-version>
 
-  <!-- It's possible to add more components to the -->
-  <!-- same package, multiple services, data providers etc -->
-
+  <component>
+    <name>router</name>
+    <application>
+      <python-class-name>router.router.Router</python-class-name>
+    </application>
+  </component>
 </ncs-package>

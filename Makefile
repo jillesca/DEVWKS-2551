@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := workshop
+
 workshop:
 	chmod +x ./build_workshop.sh
 	./build_workshop.sh
