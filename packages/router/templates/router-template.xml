@@ -1,17 +1,12 @@
-<config-template xmlns="http://tail-f.com/ns/config/1.0"
-  servicepoint="router-servicepoint">
+<config-template xmlns="http://tail-f.com/ns/config/1.0">
   <devices xmlns="http://tail-f.com/ns/ncs">
     <device>
       <name>{/device}</name>
       <config>
         <ip xmlns="urn:ios">
-          <name-server>
-            <?foreach {/sys/dns/server}?>
-            <name-server-list>
-              <address>{address}</address>
-            </name-server-list>
-            <?end?>
-          </name-server>
+          <?foreach {/sys/dns/server}?>
+          <name-server>{address}</name-server>
+          <?end?>
         </ip>
         <ip xmlns="http://tail-f.com/ned/cisco-nx">
           <name-server>
@@ -37,14 +32,12 @@
           </server>
         </ntp>
         <ntp xmlns="urn:ios">
-          <trusted-key>
-            <key-number>{/sys/ntp/key}</key-number>
-          </trusted-key>
           <server>
             <?foreach {/sys/ntp/server}?>
-            <peer-list>
-              <name>{name}</name>
-            </peer-list>
+            <server-list>
+              <ip-address>{name}</ip-address>
+              <key>{key}</key>
+            </server-list>
             <?end?>
           </server>
         </ntp>

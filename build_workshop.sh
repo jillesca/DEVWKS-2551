@@ -25,12 +25,14 @@ echo -e "${GREEN}# Creating up netsim${NC}"
 ncs-netsim delete-network --dir ${NCS_RUN_DIR}/netsim
 ncs-netsim --dir ${NCS_RUN_DIR}/netsim create-network $NCS_DIR/packages/neds/cisco-ios-cli-3.0 1 dist-rtr
 ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cisco-iosxr-cli-3.5 1 core-rtr
+ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cisco-nx-cli-3.0 1 dist-sw
 
 echo -e "${GREEN}# Configuring netsim devices${NC}"
 ncs-setup --dest ${NCS_RUN_DIR} --netsim-dir ${NCS_RUN_DIR}/netsim
 
 echo -e "${GREEN}# Copying the router package${NC}"
-cp -r ${HOME}/packages/router ${NCS_RUN_DIR}/packages
+# cp -r ${HOME}/packages/router ${NCS_RUN_DIR}/packages
+ln -sf ${HOME}/packages/router ${NCS_RUN_DIR}/packages
 # ncs-make-package  --no-java --service-skeleton python-and-template --component-class router.Router --dest ${NCS_RUN_DIR}/packages/router router
 
 echo -e "${GREEN}# Starting netsim devices${NC}"
