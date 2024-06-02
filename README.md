@@ -80,3 +80,19 @@ Use show commands using live-status on NSO.
 ```bash
 devices device core-rtr0 live-status exec show running-config hostname
 ```
+
+compile the package
+
+```bash
+make clean all -C ${NCS_RUN_DIR}/packages/router/src/
+```
+
+reload the packages
+
+```bash
+echo "packages reload" | ncs_cli -C -u admin
+```
+
+```bash
+echo 'packages package router redeploy' | ncs_cli -Cu admin
+```

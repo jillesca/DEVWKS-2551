@@ -4,6 +4,7 @@ services:
     container_name: nso-workshop
     hostname: nso-workshop
     tty: true
+    user: 1000:100
     restart: always
     environment:
       - EXTRA_ARGS=--with-package-reload
