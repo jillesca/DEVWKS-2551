@@ -22,6 +22,13 @@ class ServiceCallbacks(Service):
                 template = ncs.template.Template(service)
                 template.apply("syslog-template", vars)
 
+        if service.sys.ntp:
+            for server in service.sys.ntp.server:
+                vars = ncs.template.Variables()
+                vars.add("NTP_ADDRESS", server.name)
+                template = ncs.template.Template(service)
+                template.apply("ntp-template", vars)
+
 
 class Router(ncs.application.Application):
     def setup(self):

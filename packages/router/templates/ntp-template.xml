@@ -5,29 +5,23 @@
       <config>
         <ntp xmlns="http://tail-f.com/ned/cisco-ios-xr">
           <server>
-            <?foreach {/sys/ntp/server}?>
             <server-list>
-              <name>{name}</name>
+              <name>{$NTP_ADDRESS}</name>
             </server-list>
-            <?end?>
           </server>
         </ntp>
         <ntp xmlns="urn:ios">
           <server>
-            <?foreach {/sys/ntp/server}?>
             <server-list>
-              <ip-address>{name}</ip-address>
+              <ip-address>{$NTP_ADDRESS}</ip-address>
               <key>{key}</key>
             </server-list>
-            <?end?>
           </server>
         </ntp>
         <ntp xmlns="http://tail-f.com/ned/cisco-nx">
-          <?foreach {/sys/ntp/server}?>
           <server>
-            <id>{name}</id>
+            <id>{$NTP_ADDRESS}</id>
           </server>
-          <?end?>
         </ntp>
       </config>
     </device>
