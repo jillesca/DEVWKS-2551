@@ -4,23 +4,17 @@
       <name>{/device}</name>
       <config>
         <ip xmlns="urn:ios">
-          <?foreach {/sys/dns/server}?>
-          <name-server>{$IP_ADDRESS}</name-server>
-          <?end?>
+          <name-server>{$DNS_ADDRESS}</name-server>
         </ip>
         <ip xmlns="http://tail-f.com/ned/cisco-nx">
           <name-server>
-            <?foreach {/sys/dns/server}?>
-            <servers>{$IP_ADDRESS}</servers>
-            <?end?>
+            <servers>{$DNS_ADDRESS}</servers>
           </name-server>
         </ip>
         <domain xmlns="http://tail-f.com/ned/cisco-ios-xr">
-          <?foreach {/sys/dns/server}?>
           <name-server>
-            <address>{$IP_ADDRESS}</address>
+            <address>{$DNS_ADDRESS}</address>
           </name-server>
-          <?end?>
         </domain>
       </config>
     </device>

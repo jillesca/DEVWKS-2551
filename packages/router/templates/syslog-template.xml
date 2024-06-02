@@ -4,24 +4,18 @@
       <name>{/device}</name>
       <config>
         <logging xmlns="http://tail-f.com/ned/cisco-ios-xr">
-          <?foreach {/sys/syslog/server}?>
           <host>
-            <address>{name}</address>
+            <address>{$SYSLOG_ADDRESS}</address>
           </host>
-          <?end?>
         </logging>
         <logging xmlns="urn:ios">
-          <?foreach {/sys/syslog/server}?>
           <hostname>
-            <host>{name}</host>
+            <host>{$SYSLOG_ADDRESS}</host>
           </hostname>
-          <?end?>
         </logging>
         <logging xmlns="http://tail-f.com/ned/cisco-nx">
           <server>
-            <?foreach {/sys/syslog/server}?>
-            <host>{name}</host>
-            <?end?>
+            <host>{$SYSLOG_ADDRESS}</host>
           </server>
         </logging>
       </config>
