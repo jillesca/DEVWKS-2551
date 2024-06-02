@@ -9,6 +9,9 @@ class ServiceCallbacks(Service):
     def cb_create(self, tctx, root, service, proplist):
         self.log.info("Service create(service=", service._path, ")")
 
+        device_name = root.devices.device[service.device].name
+        self.log.info(f"Configuring device {device_name}")
+
         vars = ncs.template.Variables()
         template = ncs.template.Template(service)
 
