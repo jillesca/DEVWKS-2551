@@ -10,7 +10,7 @@ USERNAME = "admin"
 PASSWORD = "admin"
 
 
-def create_restconf_session() -> requests.Session:
+def establish_restconf_connection() -> requests.Session:
     http_headers = {
         "Accept": "application/yang-data+xml",
         "Content-Type": "application/yang-data+json",
@@ -22,8 +22,12 @@ def create_restconf_session() -> requests.Session:
     return session
 
 
-def apply_data(session: requests.Session, path: str, data: str) -> str:
-    response = session.patch(BASE_URL + path, json=data)
+def send_restconf_request(
+    restconf_session: requests.Session, request_path: str, request_data: str
+) -> str:
+    response = restconf_session.patch(
+        BASE_URL + request_path, json=request_data
+    )
     response.raise_for_status()
     return response.text, response.status_code
 
@@ -58,14 +62,16 @@ def _get_dns_server_payload(
     }
 
 
-def print_response(response: BeautifulSoup, status_code: str) -> None:
-    print(f"{'#' * 20} xml received: {'#' * 20}")
-    print(response.prettify())
-    print(f"http status code: {status_code}")
+def display_parsed_response(
+    parsed_data: BeautifulSoup, http_status_code: str
+) -> None:
+    print(f"{'#' * 20} Response received: {'#' * 20}")
+    print(parsed_data.prettify())
+    print(f"http status code: {http_status_code}")
 
 
-def parse_xml(xml: str) -> BeautifulSoup:
-    return BeautifulSoup(xml, "xml")
+def parse_xml(xml_data: str) -> BeautifulSoup:
+    return BeautifulSoup(xml_data, "xml")
 
 
 def main() -> None:
@@ -73,7 +79,7 @@ def main() -> None:
     DEVICE_NAME = "core-rtr0"
     SERVER_ADDRESS = "9.9.9.9"
 
-    session = create_restconf_session()
+    session = establish_restconf_connection()
 
     ## Dry run
     path, data = add_dns_server_dry_run(
@@ -81,9 +87,13 @@ def main() -> None:
         device_name=DEVICE_NAME,
         server_address=SERVER_ADDRESS,
     )
-    response, status_code = apply_data(session, path, data=data)
-    parsed_response = parse_xml(response)
-    print_response(parsed_response, status_code)
+    response, status_code = send_restconf_request(
+        restconf_session=session, request_path=path, request_data=data
+    )
+    parsed_response = parse_xml(xml_data=response)
+    display_parsed_response(
+        parsed_data=parsed_response, http_status_code=status_code
+    )
 
     # Apply
     path, data = add_dns_server(
@@ -91,9 +101,13 @@ def main() -> None:
         device_name=DEVICE_NAME,
         server_address=SERVER_ADDRESS,
     )
-    response, status_code = apply_data(session, path, data=data)
-    parsed_response = parse_xml(response)
-    print_response(parsed_response, status_code)
+    response, status_code = send_restconf_request(
+        restconf_session=session, request_path=path, request_data=data
+    )
+    parsed_response = parse_xml(xml_data=response)
+    display_parsed_response(
+        parsed_data=parsed_response, http_status_code=status_code
+    )
 
 
 if __name__ == "__main__":

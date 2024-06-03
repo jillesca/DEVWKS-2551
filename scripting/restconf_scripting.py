@@ -10,7 +10,7 @@ USERNAME = "admin"
 PASSWORD = "admin"
 
 
-def create_restconf_session() -> requests.Session:
+def establish_restconf_connection() -> requests.Session:
     session = requests.session()
     session.auth = HTTPBasicAuth(USERNAME, PASSWORD)
     session.headers.update({"Accept": "application/yang-data+xml"})
@@ -18,14 +18,16 @@ def create_restconf_session() -> requests.Session:
     return session
 
 
-def fetch_data(session: requests.Session, path: str) -> str:
-    response = session.get(url=BASE_URL + path)
+def send_restconf_request(
+    restconf_session: requests.Session, request_path: str
+) -> str:
+    response = restconf_session.get(url=BASE_URL + request_path)
     response.raise_for_status()
     return response.text
 
 
-def parse_xml(xml: str) -> dict:
-    return BeautifulSoup(xml, "xml")
+def parse_xml(xml_data: str) -> dict:
+    return BeautifulSoup(xml_data, "xml")
 
 
 def get_xr_device_hostname_rest_path(device_name: str) -> str:
@@ -35,10 +37,12 @@ def get_xr_device_hostname_rest_path(device_name: str) -> str:
 def main() -> None:
     DEVICE_NAME = "core-rtr0"
 
-    session = create_restconf_session()
+    session = establish_restconf_connection()
     path = get_xr_device_hostname_rest_path(device_name=DEVICE_NAME)
-    response = fetch_data(session, path)
-    parsed_response = parse_xml(response)
+    response = send_restconf_request(
+        restconf_session=session, request_path=path
+    )
+    parsed_response = parse_xml(xml_data=response)
 
     print(f"{'#' * 20} xml received: {'#' * 20}")
     print(parsed_response.prettify())
