@@ -51,6 +51,12 @@ def add_dns_server(
 def _get_dns_server_payload(
     service_name: str, device_name: str, server_address: str
 ) -> str:
+    """
+    To get the data payload, add first an example manually,
+    commit it, and then use 'display json' as below
+
+    show running-config router | display json
+    """
     return {
         "router:router": [
             {
