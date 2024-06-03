@@ -18,8 +18,8 @@ def create_restconf_session() -> requests.Session:
     return session
 
 
-def fetch_data(session: requests.Session, endpoint: str) -> str:
-    response = session.get(BASE_URL + endpoint)
+def fetch_data(session: requests.Session, path: str) -> str:
+    response = session.get(url=BASE_URL + path)
     response.raise_for_status()
     return response.text
 
@@ -28,16 +28,16 @@ def parse_xml(xml: str) -> dict:
     return BeautifulSoup(xml, "xml")
 
 
-def get_xr_device_hostname_rest_path(hostname: str) -> str:
-    return f"/restconf/data/tailf-ncs:devices/device={hostname}/config/tailf-ned-cisco-ios-xr:hostname"
+def get_xr_device_hostname_rest_path(device_name: str) -> str:
+    return f"/restconf/data/tailf-ncs:devices/device={device_name}/config/tailf-ned-cisco-ios-xr:hostname"
 
 
 def main() -> None:
     DEVICE_NAME = "core-rtr0"
 
     session = create_restconf_session()
-    api_endpoint = get_xr_device_hostname_rest_path(hostname=DEVICE_NAME)
-    response = fetch_data(session, api_endpoint)
+    path = get_xr_device_hostname_rest_path(device_name=DEVICE_NAME)
+    response = fetch_data(session, path)
     parsed_response = parse_xml(response)
 
     print(f"{'#' * 20} xml received: {'#' * 20}")
