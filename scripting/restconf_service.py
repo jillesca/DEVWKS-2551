@@ -12,7 +12,7 @@ PASSWORD = "admin"
 
 def create_restconf_session() -> requests.Session:
     http_headers = {
-        "Accept": "application/yang-data+json",
+        "Accept": "application/yang-data+xml",
         "Content-Type": "application/yang-data+json",
     }
     session = requests.session()
@@ -25,7 +25,7 @@ def create_restconf_session() -> requests.Session:
 def apply_data(session: requests.Session, path: str, data: str) -> str:
     response = session.patch(BASE_URL + path, json=data)
     response.raise_for_status()
-    return response.text
+    return response.text, response.status_code
 
 
 def add_dns_server_dry_run(
@@ -47,39 +47,31 @@ def add_dns_server(
 def _get_dns_server_payload(
     service_name: str, device_name: str, server_address: str
 ) -> str:
-    print(f"{type(service_name)=}")
-    print(f"{type(device_name)=}")
-    print(f"{type(server_address)=}")
-    data = {
+    return {
         "router:router": [
             {
-                "name": "core",
-                "device": ["core-rtr0"],
-                "sys": {"ntp": {"server": [{"name": "4.4.4.4"}]}},
+                "name": service_name,
+                "device": [device_name],
+                "sys": {"ntp": {"server": [{"name": server_address}]}},
             }
         ]
     }
 
-    print(f"{data=}")
-    print(f"{type(data)=}")
-    return data
 
-
-def print_response(response: str) -> None:
+def print_response(response: BeautifulSoup, status_code: str) -> None:
     print(f"{'#' * 20} xml received: {'#' * 20}")
     print(response.prettify())
-    print(f"{'#' * 20} text received: {'#' * 20}")
-    print(response.text)
+    print(f"http status code: {status_code}")
 
 
-def parse_xml(xml: str) -> dict:
+def parse_xml(xml: str) -> BeautifulSoup:
     return BeautifulSoup(xml, "xml")
 
 
 def main() -> None:
     SERVICE_NAME = "core"
     DEVICE_NAME = "core-rtr0"
-    SERVER_ADDRESS = "1.1.1.1"
+    SERVER_ADDRESS = "9.9.9.9"
 
     session = create_restconf_session()
 
@@ -89,19 +81,19 @@ def main() -> None:
         device_name=DEVICE_NAME,
         server_address=SERVER_ADDRESS,
     )
-    response = apply_data(session, path, data=data)
+    response, status_code = apply_data(session, path, data=data)
     parsed_response = parse_xml(response)
-    print_response(parsed_response)
+    print_response(parsed_response, status_code)
 
-    ## Apply
-    # path, data = add_dns_server(
-    #     service_name=SERVICE_NAME,
-    #     device_name=DEVICE_NAME,
-    #     server_address=SERVER_ADDRESS,
-    # )
-    # response = apply_data(session, path, data=data)
-    # parsed_response = parse_xml(response)
-    # print_response(parsed_response)
+    # Apply
+    path, data = add_dns_server(
+        service_name=SERVICE_NAME,
+        device_name=DEVICE_NAME,
+        server_address=SERVER_ADDRESS,
+    )
+    response, status_code = apply_data(session, path, data=data)
+    parsed_response = parse_xml(response)
+    print_response(parsed_response, status_code)
 
 
 if __name__ == "__main__":
