@@ -8,70 +8,84 @@ For reference, you can find the info shared on the workshop under the [NSO Pytho
 
 ## Setup the environment
 
-Create the environment variables required for the lab to run
+Setup the environment required for the lab.
 
 ```bash
-export LAB_DIR=${HOME}/src
-mkdir -p ${LAB_DIR}
-export NCS_RUN_DIR=${LAB_DIR}/nso-instance
-mkdir -p ${NCS_RUN_DIR}
-cd ${LAB_DIR}
+make
 ```
 
-Create the netsim devices.
-
-```bash
-ncs-netsim --dir ${NCS_RUN_DIR}/netsim create-network $NCS_DIR/packages/neds/cisco-ios-cli-3.0 1 dist-rtr
-ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cisco-iosxr-cli-3.5 1 core-rtr
-```
-
-Set up an NSO instance (project) directory:
-
-```bash
-ncs-setup --dest ${NCS_RUN_DIR} --netsim-dir ${NCS_RUN_DIR}/netsim
-```
-
-Start netsim and NSO
-
-```bash
-cd ${NCS_RUN_DIR}
-ncs-netsim start
-ncs
-```
+> [!NOTE]
+> If you receive an error during the setup, enter `make` again. If there are too many issues, reset the environment.
 
 ```bash
 echo "devices device core-rtr0 sync-from" | ncs_cli -C -u admin
 ```
 
-## Scripting with the NSO Python API
+## Scenario 1. Scripting with the NSO Python API
 
-Use the following Python commands to establish a connection to the NSO and print management addresses that the NSO uses to connect to the devices:
+Examine the examples show on the [ncs_scripting.py file](scripting/ncs_scripting.py)
 
-```bash
-python3 ${LAB_DIR}/scripting_with_nso.py
-```
-
-After changing the hostname of the netsim device, review your changes.
+Run the python scripts and review the output.
 
 ```bash
-echo "show running-config devices device core-rtr0 config hostname" | ncs_cli -C -u admin
+python scripting/ncs_scripting.py
 ```
 
-```python
-python3 ${LAB_DIR}/add_device.py --help
+## Scenario 2. Run services with NSO Python API
+
+First compile the package used.
+
+```bash
+make clean all -C ${NCS_RUN_DIR}/packages/router/src/
 ```
 
-```python
-python3 ${LAB_DIR}/add_device.py --name core-rtr0 --address 127.0.0.1 --ned cisco-iosxr-cli-7.5 --auth default
+Reload the packages.
+
+```bash
+echo "packages reload" | ncs_cli -C -u admin
 ```
 
-## Notes
+Test the package
+
+```bash
+ncs_cli -Cu admin
+config
+router core device core-rtr0 sys dns server 1.1.1.1
+router core device core-rtr0 sys syslog server 1.1.1.1
+router core device core-rtr0 sys syslog server 2.2.2.2
+router core device core-rtr0 sys ntp server 1.1.1.1
+router core device core-rtr0 sys ntp server 2.2.2.2
+router distribution device dist-rtr0 sys dns server 6.6.6.6
+router distribution device dist-rtr0 sys dns server 5.5.5.5
+router distribution device dist-rtr0 sys syslog server 6.6.6.6
+router access device dist-sw0 sys dns server 4.4.4.4
+router access device dist-sw0 sys dns server 3.3.3.3
+router access device dist-sw0 sys syslog server 4.4.4.4
+router access device dist-sw0 sys syslog server 3.3.3.3
+router access device dist-sw0 sys ntp server 4.4.4.4
+router access device dist-sw0 sys ntp server 3.3.3.3
+```
+
+## Scenario 3. Interact with NSO programmatically
+
+Add a new DNS server using the `router` package.
+
+Use the [restconf_service.py](scripting/restconf_service.py) file.
+
+```bash
+python scripting/restconf_service.py
+```
+
+## Bonus. Development
+
+This exercise was developed using the official NSO container. The [compose file](docker-compose.yml) used for development are kept for reference and are not part of the workshop.
+
+### Useful commands
 
 Access netsim cli device.
 
 ```bash
 ncs-netsim cli-c core-rtr0 --dir ~/src/workshop/netsim
-ncs-netsim cli-c dist-rtr0 --dir ~/src/workshop/netsim
 show running-config hostname
 ```
 
@@ -81,17 +95,7 @@ Use show commands using live-status on NSO.
 devices device core-rtr0 live-status exec show running-config hostname
 ```
 
-compile the package
-
-```bash
-make clean all -C ${NCS_RUN_DIR}/packages/router/src/
-```
-
-reload the packages
-
-```bash
-echo "packages reload" | ncs_cli -C -u admin
-```
+Redeploy the router packages for changes on python code or templates files.
 
 ```bash
 echo 'packages package router redeploy' | ncs_cli -Cu admin
