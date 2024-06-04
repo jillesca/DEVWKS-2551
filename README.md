@@ -11,6 +11,10 @@ For reference, you can find the info shared on the workshop under the [NSO Pytho
 Setup the environment required for the lab.
 
 ```bash
+cd ~/src/DEVWKS-2551/
+```
+
+```bash
 make
 ```
 
@@ -24,7 +28,11 @@ Examine the examples show on the [ncs_scripting.py file](scripting/ncs_scripting
 Run the python scripts and review the output.
 
 ```bash
-python ~/src/scripting/ncs_scripting.py
+python ~/src/DEVWKS-2551/scripting/ncs_scripting.py
+```
+
+```bash
+python ~/src/DEVWKS-2551/scripting/restconf_scripting
 ```
 
 ## Scenario 2. Run services with NSO Python API
@@ -45,6 +53,9 @@ Test the package
 
 ```bash
 ncs_cli -Cu admin
+```
+
+```bash
 config
 ```
 
@@ -86,7 +97,7 @@ Add a new DNS server using the `router` package.
 Use the [restconf_service.py](scripting/restconf_service.py) file.
 
 ```bash
-python ~/src/scripting/restconf_service.py
+python ~/src/DEVWKS-2551/scripting/restconf_service.py
 ```
 
 ## Bonus. Development
