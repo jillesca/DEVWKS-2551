@@ -17,10 +17,6 @@ make
 > [!NOTE]
 > If you receive an error during the setup, enter `make` again. If there are too many issues, reset the environment.
 
-```bash
-echo "devices device core-rtr0 sync-from" | ncs_cli -C -u admin
-```
-
 ## Scenario 1. Scripting with the NSO Python API
 
 Examine the examples show on the [ncs_scripting.py file](scripting/ncs_scripting.py)
@@ -50,6 +46,11 @@ Test the package
 ```bash
 ncs_cli -Cu admin
 config
+```
+
+Pick any of the lines below to test the package
+
+```bash
 router core device core-rtr0 sys dns server 1.1.1.1
 router core device core-rtr0 sys syslog server 1.1.1.1
 router core device core-rtr0 sys syslog server 2.2.2.2
@@ -64,6 +65,18 @@ router access device dist-sw0 sys syslog server 4.4.4.4
 router access device dist-sw0 sys syslog server 3.3.3.3
 router access device dist-sw0 sys ntp server 4.4.4.4
 router access device dist-sw0 sys ntp server 3.3.3.3
+```
+
+See the dry-run
+
+```bash
+commit dry-run
+```
+
+Commit the changes.
+
+```bash
+commit
 ```
 
 ## Scenario 3. Interact with NSO programmatically
