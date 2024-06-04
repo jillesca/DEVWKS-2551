@@ -1,5 +1,7 @@
 # Empowering Network Automation
 
+[![Run in Cisco Cloud IDE](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-runable-icon.svg)](https://developer.cisco.com/codeexchange/devenv/jillesca/DEVWKS-2551/)
+
 Welcome to **DEVWKS-2551 Empowering Network Automation, Practice NSO with Python**
 
 On this file you can find the instructions to work during the workshop. However, you can try the exercise presented here at any time using the **_Cisco Cloud IDE Run it!_** button on the top left corner.
@@ -32,7 +34,7 @@ python ~/src/DEVWKS-2551/scripting/ncs_scripting.py
 ```
 
 ```bash
-python ~/src/DEVWKS-2551/scripting/restconf_scripting
+python ~/src/DEVWKS-2551/scripting/restconf_scripting.py
 ```
 
 ## Scenario 2. Run services with NSO Python API
