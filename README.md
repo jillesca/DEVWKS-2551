@@ -24,7 +24,7 @@ Examine the examples show on the [ncs_scripting.py file](scripting/ncs_scripting
 Run the python scripts and review the output.
 
 ```bash
-python scripting/ncs_scripting.py
+python ~/src/scripting/ncs_scripting.py
 ```
 
 ## Scenario 2. Run services with NSO Python API
@@ -86,12 +86,12 @@ Add a new DNS server using the `router` package.
 Use the [restconf_service.py](scripting/restconf_service.py) file.
 
 ```bash
-python scripting/restconf_service.py
+python ~/src/scripting/restconf_service.py
 ```
 
 ## Bonus. Development
 
-This exercise was developed using the official NSO container. The [compose file](docker-compose.yml) used for development are kept for reference and are not part of the workshop.
+This exercise was developed using the official NSO container. The [compose file](docker-compose.yml) used for development is kept for reference and is not part of the workshop.
 
 ### Useful commands
 
