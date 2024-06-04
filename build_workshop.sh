@@ -31,9 +31,10 @@ echo -e "${GREEN}# Configuring netsim devices${NC}"
 ncs-setup --dest ${NCS_RUN_DIR} --netsim-dir ${NCS_RUN_DIR}/netsim
 
 echo -e "${GREEN}# Copying the router package${NC}"
-ln -sf ${HOME}/packages/router ${NCS_RUN_DIR}/packages
-make clean all -C ${NCS_RUN_DIR}/packages/router/src/
 # ncs-make-package  --no-java --service-skeleton python-and-template --component-class router.Router --dest ${NCS_RUN_DIR}/packages/router router
+# make clean all -C ${NCS_RUN_DIR}/packages/router/src/
+# ln -sf ${HOME}/packages/router ${NCS_RUN_DIR}/packages
+ln -sf ${LAB_DIR}/DEVWKS-2551/packages/router ${NCS_RUN_DIR}/packages
 
 echo -e "${GREEN}# Starting netsim devices${NC}"
 cd ${NCS_RUN_DIR}
