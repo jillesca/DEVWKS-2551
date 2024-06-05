@@ -1,8 +1,7 @@
-from pprint import pprint as pp
 import ncs
 
 
-def see_devices_attributes() -> None:
+def see_object_attributes() -> None:
     maapi = ncs.maapi.Maapi()
     maapi.start_user_session(user="admin", context="system", groups=[])
     transaction = maapi.start_write_trans()
@@ -77,7 +76,7 @@ if "__main__" == __name__:
     HOSTNAME = "devwks-2551"
     DEVICE_NAME = "core-rtr0"
 
-    see_devices_attributes()
+    see_object_attributes()
     see_device_address()
     update_device_attribute_dry_run(device_name=DEVICE_NAME, hostname=HOSTNAME)
     update_device_attribute(device_name=DEVICE_NAME, hostname=HOSTNAME)

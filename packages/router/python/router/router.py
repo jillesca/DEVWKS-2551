@@ -15,12 +15,12 @@ class ServiceCallbacks(Service):
         vars = ncs.template.Variables()
         template = ncs.template.Template(service)
 
-        for server in service.sys.dns.server:
-            vars.add("DNS_ADDRESS", server.address)
+        for server in service.sys.dns.servers:
+            vars.add("DNS_ADDRESS", server.host)
             template.apply("dns-template", vars)
 
         for server in service.sys.syslog.server:
-            vars.add("SYSLOG_ADDRESS", server.name)
+            vars.add("SYSLOG_ADDRESS", server.address)
             template.apply("syslog-template", vars)
 
         for server in service.sys.ntp.server:

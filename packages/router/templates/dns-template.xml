@@ -4,7 +4,11 @@
       <name>{/device}</name>
       <config>
         <ip xmlns="urn:ios">
-          <name-server>{$DNS_ADDRESS}</name-server>
+          <name-server-list>
+            <address>
+              {$DNS_ADDRESS}
+            </address>
+          </name-server-list>
         </ip>
         <ip xmlns="http://tail-f.com/ned/cisco-nx">
           <name-server>
