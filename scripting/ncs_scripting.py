@@ -1,16 +1,15 @@
-from pprint import pprint as pp
 import ncs
 
 
-def see_devices_attributes() -> None:
+def see_object_attributes() -> None:
     maapi = ncs.maapi.Maapi()
     maapi.start_user_session(user="admin", context="system", groups=[])
     transaction = maapi.start_write_trans()
 
     root = ncs.maagic.get_root(backend=transaction)
     for device in root.devices.device:
-        pp(dir(device))
-        pp(type(device))
+        print("#" * 50)
+        print(device)
     maapi.close()
 
 
@@ -21,7 +20,7 @@ def see_device_address() -> None:
 
     root = ncs.maagic.get_root(backend=transaction)
     for device in root.devices.device:
-        print(f"Device {device.name} address {device.address}")
+        print(f"Device {device.host} address {device.address}")
     maapi.close()
 
 
@@ -30,7 +29,7 @@ def update_device_attribute_dry_run(device_name: str, hostname: str) -> dict:
         user="admin", context="system"
     ) as transaction:
         root = ncs.maagic.get_root(backend=transaction)
-        root.devices.device[device_name].config.hostname = hostname
+        root.devices.device[device_name].hostname = hostname
 
         commit_params = transaction.get_params()
         commit_params.dry_run_native()
@@ -45,7 +44,7 @@ def update_device_attribute(device_name: str, hostname: str) -> None:
         user="admin", context="system"
     ) as transaction:
         root = ncs.maagic.get_root(backend=transaction)
-        root.devices.device[device_name].config.hostname = hostname
+        root.devices.device[device_name].config.host = hostname
         transaction.apply()
         print("Transaction applied")
 
@@ -55,7 +54,7 @@ def show_xr_command(device_name: str, show_command: str) -> None:
         with ncs.maapi.Session(maapi=maapi, user="admin", context="system"):
             root = ncs.maagic.get_root(backend=maapi)
             device = root.devices.device[device_name]
-            cli_any_command = device.live_status.cisco_ios_xr_stats__exec.show
+            cli_any_command = device.live_status.show
             command = cli_any_command.get_input()
             command.args = [show_command]
             result = cli_any_command.request(command)
@@ -77,7 +76,7 @@ if "__main__" == __name__:
     HOSTNAME = "devwks-2551"
     DEVICE_NAME = "core-rtr0"
 
-    see_devices_attributes()
+    # see_object_attributes()
     see_device_address()
     update_device_attribute_dry_run(device_name=DEVICE_NAME, hostname=HOSTNAME)
     update_device_attribute(device_name=DEVICE_NAME, hostname=HOSTNAME)

@@ -35,7 +35,7 @@ def send_restconf_request(
 def add_dns_server_dry_run(
     service_name: str, device_name: str, server_address: str
 ) -> tuple[str, dict]:
-    path = "/restconf/data?dry-run"
+    path = "/restconf/data-dry-run"
     data = _get_dns_server_payload(service_name, device_name, server_address)
     return path, data
 
@@ -58,7 +58,7 @@ def _get_dns_server_payload(
     show running-config router | display json
     """
     return {
-        "router:router": [
+        "route": [
             {
                 "name": service_name,
                 "device": [device_name],
@@ -87,7 +87,7 @@ def main() -> None:
 
     session = establish_restconf_connection()
 
-    ## Dry run
+    #### Dry run
     path, data = add_dns_server_dry_run(
         service_name=SERVICE_NAME,
         device_name=DEVICE_NAME,
@@ -101,19 +101,19 @@ def main() -> None:
         parsed_data=parsed_response, http_status_code=status_code
     )
 
-    # Apply
-    path, data = add_dns_server(
-        service_name=SERVICE_NAME,
-        device_name=DEVICE_NAME,
-        server_address=SERVER_ADDRESS,
-    )
-    response, status_code = send_restconf_request(
-        restconf_session=session, request_path=path, request_data=data
-    )
-    parsed_response = parse_xml(xml_data=response)
-    display_parsed_response(
-        parsed_data=parsed_response, http_status_code=status_code
-    )
+    # #### Apply
+    # path, data = add_dns_server(
+    #     service_name=SERVICE_NAME,
+    #     device_name=DEVICE_NAME,
+    #     server_address=SERVER_ADDRESS,
+    # )
+    # response, status_code = send_restconf_request(
+    #     restconf_session=session, request_path=path, request_data=data
+    # )
+    # parsed_response = parse_xml(xml_data=response)
+    # display_parsed_response(
+    #     parsed_data=parsed_response, http_status_code=status_code
+    # )
 
 
 if __name__ == "__main__":

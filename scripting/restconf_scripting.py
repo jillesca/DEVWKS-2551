@@ -31,7 +31,7 @@ def parse_xml(xml_data: str) -> dict:
 
 
 def get_xr_device_hostname_rest_path(device_name: str) -> str:
-    return f"/restconf/data/tailf-ncs:devices/device={device_name}/config/tailf-ned-cisco-ios-xr:hostname"
+    return f"/restconf/data/tailf-ncs:devices/device={device_name}/config/hostname"
 
 
 def main() -> None:

@@ -106,6 +106,8 @@ python ~/src/DEVWKS-2551/scripting/restconf_service.py
 
 This exercise was developed using the official NSO container. The [compose file](docker-compose.yml) used for development is kept for reference and is not part of the workshop.
 
+However the [build_workshop script](build_workshop.sh#L37) only copies the router package correctly in the NSO Playground. If you are working with the container locally, you need to copy the router package manually.
+
 ### Useful commands
 
 Access netsim cli device.
