@@ -10,7 +10,7 @@ For your convenience, all the information shared during the workshop is compiled
 
 ## Objective
 
-Embark on a hands-on journey to master the NSO Python API. We've designed this workshop around the concept of _learning by fixing_. You'll dive into broken examples, unravel the issues, and learn how to navigate the Python API in the process.
+Start on a hands-on journey to learn the NSO Python API. We've designed this workshop around the concept of **_learning by fixing_**. You'll dive into broken examples, unravel the issues, and learn how to navigate the Python API in the process.
 
 This approach not only gives you practical experience but also equips you with the problem-solving skills needed in real-world programming. Get ready to transform challenges into learning opportunities.
 
@@ -54,7 +54,9 @@ python ~/src/DEVWKS-2551/scripting/restconf_scripting.py
 This example showcases an NSO service that use Python to simplify templates, making them easier to maintain.
 
 > [!NOTE]
-> Work with the files under the [packages/router](packages/router/) directory. This package has a symbolic link to the NSO directory.
+> Work with the files under the [packages/router](packages/router/) directory. This package has a symbolic link to the running NSO packages directory.
+
+### Prepare the example
 
 First compile the package used.
 
@@ -68,6 +70,8 @@ Reload the packages.
 echo "packages reload" | ncs_cli -C -u admin
 ```
 
+### Test the example
+
 Test if the package works correctly.
 
 ```bash
@@ -78,7 +82,7 @@ ncs_cli -Cu admin
 config
 ```
 
-Pick any of the lines below to test the package
+Pick any one or multiple lines below to test the router package.
 
 ```bash
 router core device core-rtr0 sys dns server 1.1.1.1
@@ -97,7 +101,7 @@ router access device dist-sw0 sys ntp server 4.4.4.4
 router access device dist-sw0 sys ntp server 3.3.3.3
 ```
 
-See the dry-run
+Do a `dry-run` to make sure the package is working correctly.
 
 ```bash
 commit dry-run
@@ -106,7 +110,7 @@ commit dry-run
 > [!NOTE]
 > If issues, review the [router python script](packages/router/python/router/router.py) under the packages directoy.
 
-Redeploy the pacakge if you make changes to the python script.
+Redeploy the package if you make changes to the python script.
 
 ```bash
 packages package router redeploy
@@ -122,7 +126,7 @@ commit
 
 ## Scenario 3. Interact with NSO programmatically
 
-Interact with NSO adding a new DNS server using the RESTCONF interface, which is useful when integrating NSO with external systems.
+Interact with NSO adding a new DNS server using the `RESTCONF` interface, which is useful when integrating NSO with external systems.
 
 Use the [restconf_service.py](scripting/restconf_service.py) file. On this example the `http` code is already correctly implemented.
 
