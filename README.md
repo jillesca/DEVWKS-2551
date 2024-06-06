@@ -37,13 +37,13 @@ Our first scenario offers a straightforward example of how to change a device's 
 
 To identify the problem, you can either debug the code or utilize the helper functions embedded in the script, designed to simplify error detection.
 
-Run the Python scripts and scrutinize the output to enhance your understanding.
+Start by running the [ncs_scripting.py file.](scripting/ncs_scripting.py)
 
 ```bash
 python ~/src/DEVWKS-2551/scripting/ncs_scripting.py
 ```
 
-On this second example, the `http` code is already correctly implemented.
+On this second example, run the [restconf_scripting.py file.](scripting/restconf_scripting.py) The `http` code is already correctly implemented.
 
 ```bash
 python ~/src/DEVWKS-2551/scripting/restconf_scripting.py
