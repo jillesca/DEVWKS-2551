@@ -22,7 +22,7 @@ def update_device_attribute(device_name: str, hostname: str) -> None:
         user="admin", context="system"
     ) as transaction:
         root = ncs.maagic.get_root(backend=transaction)
-        root.devices.device[device_name].config.host = hostname
+        root.devices.device[device_name].config.hostname = hostname
         transaction.apply()
         print("Transaction applied")
 
