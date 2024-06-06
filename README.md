@@ -43,7 +43,7 @@ Start by running the [ncs_scripting.py file.](scripting/ncs_scripting.py)
 python ~/src/DEVWKS-2551/scripting/ncs_scripting.py
 ```
 
-On this second example, run the [restconf_scripting.py file.](scripting/restconf_scripting.py) The `http` code is already correctly implemented.
+You can also get the same data via RESTCONF
 
 ```bash
 python ~/src/DEVWKS-2551/scripting/restconf_scripting.py

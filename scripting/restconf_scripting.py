@@ -30,9 +30,10 @@ def parse_xml(xml_data: str) -> dict:
     return BeautifulSoup(xml_data, "xml")
 
 
-# TIP: Verify the RESTCONF path using the NSO CLI
+# TIP: Verify the RESTCONF path using the NSO CLI using the display pipe command
+# show running-config devices device core-rtr0 config hostname | display restconf
 def get_xr_device_hostname_rest_path(device_name: str) -> str:
-    return f"/restconf/data/tailf-ncs:devices/device={device_name}/config/hostname"
+    return f"/restconf/data/tailf-ncs:devices/device={device_name}/config/tailf-ned-cisco-ios-xr:hostname"
 
 
 def main() -> None:
