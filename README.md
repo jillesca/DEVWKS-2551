@@ -116,9 +116,9 @@ Redeploy the package if you make changes to the python script.
 packages package router redeploy
 ```
 
-Test the pacakge again with a `commit dry-run`
+Test the package again with a `commit dry-run`
 
-Finally, when the pacakge is fixed, commit the changes.
+Finally, when the package is fixed, commit the changes.
 
 ```bash
 commit
