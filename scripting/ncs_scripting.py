@@ -16,7 +16,7 @@ def update_device_attribute_dry_run(device_name: str, hostname: str) -> dict:
         print(f"{dry_run_result=}")
 
 
-# TIP: See the attibtutes of the device object
+# TIP: See the attributes of the device object
 def update_device_attribute(device_name: str, hostname: str) -> None:
     with ncs.maapi.single_write_trans(
         user="admin", context="system"
