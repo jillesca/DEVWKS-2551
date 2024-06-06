@@ -1,29 +1,6 @@
 import ncs
 
 
-def see_object_attributes() -> None:
-    maapi = ncs.maapi.Maapi()
-    maapi.start_user_session(user="admin", context="system", groups=[])
-    transaction = maapi.start_write_trans()
-
-    root = ncs.maagic.get_root(backend=transaction)
-    for device in root.devices.device:
-        pp(dir(device))
-        pp(type(device))
-    maapi.close()
-
-
-def see_device_address() -> None:
-    maapi = ncs.maapi.Maapi()
-    maapi.start_user_session(user="admin", context="system", groups=[])
-    transaction = maapi.start_write_trans()
-
-    root = ncs.maagic.get_root(backend=transaction)
-    for device in root.devices.device:
-        print(f"Device {device.name} address {device.address}")
-    maapi.close()
-
-
 def update_device_attribute_dry_run(device_name: str, hostname: str) -> dict:
     with ncs.maapi.single_write_trans(
         user="admin", context="system"
@@ -47,6 +24,29 @@ def update_device_attribute(device_name: str, hostname: str) -> None:
         root.devices.device[device_name].config.hostname = hostname
         transaction.apply()
         print("Transaction applied")
+
+
+def see_object_attributes() -> None:
+    maapi = ncs.maapi.Maapi()
+    maapi.start_user_session(user="admin", context="system", groups=[])
+    transaction = maapi.start_write_trans()
+
+    root = ncs.maagic.get_root(backend=transaction)
+    for device in root.devices.device:
+        pp(dir(device))
+        pp(type(device))
+    maapi.close()
+
+
+def see_device_address() -> None:
+    maapi = ncs.maapi.Maapi()
+    maapi.start_user_session(user="admin", context="system", groups=[])
+    transaction = maapi.start_write_trans()
+
+    root = ncs.maagic.get_root(backend=transaction)
+    for device in root.devices.device:
+        print(f"Device {device.name} address {device.address}")
+    maapi.close()
 
 
 def show_xr_command(device_name: str, show_command: str) -> None:

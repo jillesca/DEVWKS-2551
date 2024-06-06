@@ -15,12 +15,16 @@ class ServiceCallbacks(Service):
         vars = ncs.template.Variables()
         template = ncs.template.Template(service)
 
+        # TIPs:
+        # Compare the python object to its corresponding yang model under the src/yang folder
+        # see the python logs at $NCS_RUN_DIR/logs to see the line with error
+
         for server in service.sys.dns.servers:
             vars.add("DNS_ADDRESS", server.host)
             template.apply("dns-template", vars)
 
         for server in service.sys.syslog.server:
-            vars.add("SYSLOG_ADDRESS", server.address)
+            vars.add("SYSLOG_ADDRESS", server.name)
             template.apply("syslog-template", vars)
 
         for server in service.sys.ntp.server:
