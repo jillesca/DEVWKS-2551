@@ -9,7 +9,7 @@ def see_object_attributes() -> None:
     root = ncs.maagic.get_root(backend=transaction)
     for device in root.devices.device:
         print("#" * 50)
-        print(device)
+        print(dir(device))
     maapi.close()
 
 
@@ -20,7 +20,7 @@ def see_device_address() -> None:
 
     root = ncs.maagic.get_root(backend=transaction)
     for device in root.devices.device:
-        print(f"Device {device.host} address {device.address}")
+        print(f"Device {device.name} address {device.address}")
     maapi.close()
 
 
@@ -39,6 +39,7 @@ def update_device_attribute_dry_run(device_name: str, hostname: str) -> dict:
         print(f"{dry_run_result=}")
 
 
+# TIP: See the attibtutes of the device object
 def update_device_attribute(device_name: str, hostname: str) -> None:
     with ncs.maapi.single_write_trans(
         user="admin", context="system"
@@ -54,7 +55,7 @@ def show_xr_command(device_name: str, show_command: str) -> None:
         with ncs.maapi.Session(maapi=maapi, user="admin", context="system"):
             root = ncs.maagic.get_root(backend=maapi)
             device = root.devices.device[device_name]
-            cli_any_command = device.live_status.show
+            cli_any_command = device.live_status.cisco_ios_xr_stats__exec.show
             command = cli_any_command.get_input()
             command.args = [show_command]
             result = cli_any_command.request(command)
@@ -77,10 +78,15 @@ if "__main__" == __name__:
     DEVICE_NAME = "core-rtr0"
 
     # see_object_attributes()
-    see_device_address()
+
+    # see_device_address()
+
     update_device_attribute_dry_run(device_name=DEVICE_NAME, hostname=HOSTNAME)
+
     update_device_attribute(device_name=DEVICE_NAME, hostname=HOSTNAME)
-    show_xr_command(
-        device_name=DEVICE_NAME, show_command="running-config hostname"
-    )
-    get_device_hostname(device_name=DEVICE_NAME)
+
+    # show_xr_command(
+    #     device_name=DEVICE_NAME, show_command="running-config hostname"
+    # )
+
+    # get_device_hostname(device_name=DEVICE_NAME)

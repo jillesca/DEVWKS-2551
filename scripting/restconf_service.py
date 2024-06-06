@@ -35,7 +35,7 @@ def send_restconf_request(
 def add_dns_server_dry_run(
     service_name: str, device_name: str, server_address: str
 ) -> tuple[str, dict]:
-    path = "/restconf/data-dry-run"
+    path = "/restconf/data?dry-run"
     data = _get_dns_server_payload(service_name, device_name, server_address)
     return path, data
 
@@ -48,6 +48,7 @@ def add_dns_server(
     return path, data
 
 
+# TIP: Verify the RESTCONF data using the NSO CLI
 def _get_dns_server_payload(
     service_name: str, device_name: str, server_address: str
 ) -> str:

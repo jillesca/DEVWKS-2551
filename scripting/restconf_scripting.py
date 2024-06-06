@@ -30,6 +30,7 @@ def parse_xml(xml_data: str) -> dict:
     return BeautifulSoup(xml_data, "xml")
 
 
+# TIP: Verify the RESTCONF path using the NSO CLI
 def get_xr_device_hostname_rest_path(device_name: str) -> str:
     return f"/restconf/data/tailf-ncs:devices/device={device_name}/config/hostname"
 
@@ -44,9 +45,9 @@ def main() -> None:
     )
     parsed_response = parse_xml(xml_data=response)
 
-    print(f"{'#' * 20} xml received: {'#' * 20}")
+    print(f"{'#' * 20} xml received from NSO: {'#' * 20}")
     print(parsed_response.prettify())
-    print(f"{'#' * 20} text received: {'#' * 20}")
+    print(f"{'#' * 20} text received from NSO: {'#' * 20}")
     print(parsed_response.text)
 
 
