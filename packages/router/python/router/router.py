@@ -16,8 +16,8 @@ class ServiceCallbacks(Service):
         template = ncs.template.Template(service)
 
         # TIPs:
-        # See the python logs at $NCS_RUN_DIR/logs
-        # Compare object to the yang model
+        # Compare the python object to the yang model
+        # see the python logs at $NCS_RUN_DIR/logs to see the line with error
 
         for server in service.sys.dns.servers:
             vars.add("DNS_ADDRESS", server.host)
