@@ -23,9 +23,9 @@ mkdir -p ${NCS_RUN_DIR}
 
 echo -e "${GREEN}# Creating up netsim${NC}"
 ncs-netsim delete-network --dir ${NCS_RUN_DIR}/netsim
-ncs-netsim --dir ${NCS_RUN_DIR}/netsim create-network $NCS_DIR/packages/neds/cisco-ios-cli-3.0 1 dist-rtr
-ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cisco-iosxr-cli-3.5 1 core-rtr
-ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/packages/neds/cisco-nx-cli-3.0 1 dist-sw
+ncs-netsim --dir ${NCS_RUN_DIR}/netsim create-network $NCS_DIR/examples.ncs/common/packages/cisco-ios-netsim-cli-1.0 1 dist-rtr
+ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/examples.ncs/common/packages/cisco-iosxr-netsim-cli-1.0 1 core-rtr
+ncs-netsim --dir ${NCS_RUN_DIR}/netsim add-to-network $NCS_DIR/examples.ncs/common/packages/cisco-nx-netsim-cli-1.0 1 dist-sw
 
 echo -e "${GREEN}# Configuring netsim devices${NC}"
 ncs-setup --dest ${NCS_RUN_DIR} --netsim-dir ${NCS_RUN_DIR}/netsim
