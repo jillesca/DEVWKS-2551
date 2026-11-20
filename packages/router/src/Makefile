@@ -11,10 +11,10 @@ FXS = $(SRC:yang/%.yang=../load-dir/%.fxs)
 ##
 ## YANGPATH edited to add NED required for the example
 ##
-YANGPATH += ${NCS_RUN_DIR}/packages/cisco-ios-cli-3.8/src/ncsc-out/modules/yang
-YANGPATH += ${NCS_RUN_DIR}/packages/cisco-asa-cli-6.6/src/ncsc-out/modules/yang
-YANGPATH += ${NCS_RUN_DIR}/packages/cisco-iosxr-cli-3.5/src/ncsc-out/modules/yang
-YANGPATH += ${NCS_RUN_DIR}/packages/cisco-nx-cli-3.0/src/ncsc-out/modules/yang
+YANGPATH += ${NCS_RUN_DIR}/packages/cisco-ios-netsim-cli-1.0/src/ncsc-out/modules/yang
+YANGPATH += ${NCS_RUN_DIR}/packages/cisco-asa-netsim-cli-1.0/src/ncsc-out/modules/yang
+YANGPATH += ${NCS_RUN_DIR}/packages/cisco-iosxr-netsim-cli-1.0/src/ncsc-out/modules/yang
+YANGPATH += ${NCS_RUN_DIR}/packages/cisco-nx-netsim-cli-1.0/src/ncsc-out/modules/yang
 YANGPATH += ./yang
 
 
